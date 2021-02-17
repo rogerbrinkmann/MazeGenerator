@@ -57,54 +57,38 @@ public class Maze {
             return;
         }
 
+        // check orientation of remaining space
         if (width > height) {
-            // remaining area is more wide than tall -> draw vertical line
-
-            int randCol;
-            try {
-                // find a random column number startY, ... steps of 2
-                randCol = ThreadLocalRandom.current().nextInt(1, (width / 2) + 1) * 2 + startX - 1;
-            } catch (IllegalArgumentException e) {
-                randCol = startX;
-            }
+            
+            // remaining area is more wide than tall -> draw vertical separation line at a random location
+            int randCol = ThreadLocalRandom.current().nextInt(1, (width / 2) + 1) * 2 + startX - 1;
             for (int row = startY; row < startY + height; row++) {
                 data[row][randCol] = value;
             }
 
-            // open a break through
-            int randBreakThrough;
-            try {
-                randBreakThrough = ThreadLocalRandom.current().nextInt(1, (height / 2) + 1) * 2 + startY;
-            } catch (IllegalArgumentException e) {
-                randBreakThrough = startX;
-            }
+            // open one break through at a random location in the separation line
+            int randBreakThrough = ThreadLocalRandom.current().nextInt(1, (height / 2) + 1) * 2 + startY;
             data[randBreakThrough][randCol] = 0;
 
-            // left
+            // generate recursive maze in the remaining left half
             generate(startX, startY, randCol - startX, height, value);
-            // right
+            // generate recursive maze in the remaining right half
             generate(randCol + 1, startY, width - randCol + startX - 1, height, value);
 
         } else {
-            // remaining area is more tall than wide -> draw horizontal line
-            int randRow;
-            try {
-                // find a random row number startY, ... steps of 2
-                randRow = ThreadLocalRandom.current().nextInt(1, (height / 2) + 1) * 2 + startY - 1;
-            } catch (IllegalArgumentException e) {
-                randRow = startX + 1;
-            }
+            // remaining area is more tall than wide -> draw horizontal separation line at a random location
+            int randRow = ThreadLocalRandom.current().nextInt(1, (height / 2) + 1) * 2 + startY - 1;
             for (int col = startX; col < startX + width; col++) {
                 data[randRow][col] = value;
             }
 
-            // open a break through
+            // open one break through at a random location in the separation line
             int randBreakThrough = ThreadLocalRandom.current().nextInt(1, (width / 2) + 1) * 2 + startX;
             data[randRow][randBreakThrough] = 0;
 
-            // top
+            // generate recursive maze in the remaining top half
             generate(startX, startY, width, randRow - startY, value);
-            // bottom
+            // generate recursive maze in the remaining bottom half
             generate(startX, randRow + 1, width, height - randRow + startY - 1, value);
         }
 
