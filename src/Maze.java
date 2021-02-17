@@ -59,8 +59,9 @@ public class Maze {
 
         // check orientation of remaining space
         if (width > height) {
-            
-            // remaining area is more wide than tall -> draw vertical separation line at a random location
+
+            // remaining area is more wide than tall -> draw vertical separation line at a
+            // random location
             int randCol = ThreadLocalRandom.current().nextInt(1, (width / 2) + 1) * 2 + startX - 1;
             for (int row = startY; row < startY + height; row++) {
                 data[row][randCol] = value;
@@ -76,7 +77,8 @@ public class Maze {
             generate(randCol + 1, startY, width - randCol + startX - 1, height, value);
 
         } else {
-            // remaining area is more tall than wide -> draw horizontal separation line at a random location
+            // remaining area is more tall than wide -> draw horizontal separation line at a
+            // random location
             int randRow = ThreadLocalRandom.current().nextInt(1, (height / 2) + 1) * 2 + startY - 1;
             for (int col = startX; col < startX + width; col++) {
                 data[randRow][col] = value;

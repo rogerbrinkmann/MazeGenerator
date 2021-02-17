@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
+@SuppressWarnings("serial")
 public class AppWindow extends JFrame {
 
     MenuPanel menuPanel;
