@@ -2,27 +2,19 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Maze {
 
-    private final int rows;
-    private final int cols;
-    private final int[][] data;
+    private int rows;
+    private int cols;
+    private int[][] data;
 
-    Maze(int width, int height) {
-        this.rows = width;
-        this.cols = height;
+    Maze(int cols, int rows) {
+        this.rows = rows;
+        this.cols = cols;
 
-        this.data = new int[height][width];
+        this.data = new int[this.rows][this.cols];
     }
 
     public int[][] getAllData() {
         return this.data;
-    }
-
-    public void fillAllData(int value) {
-        for (int y = 0; y < this.rows; y++) {
-            for (int x = 0; x < this.cols; x++) {
-                this.data[y][x] = value;
-            }
-        }
     }
 
     public void drawRect(int startX, int startY, int width, int height, int value) {
@@ -49,6 +41,34 @@ public class Maze {
 
     public void setColRow(int col, int row, int value) {
         this.data[row][col] = value;
+    }
+
+    public boolean findExit(int x, int y, int value) {
+        this.data[y][x] = value;
+        
+        if (this.data[y - 1][x] == 3 || this.data[y][x + 1] == 3 || this.data[y + 1][x] == 3
+                || this.data[y][x - 1] == 3) {
+            return true;
+        }
+
+        if (this.data[y - 1][x] == 0) {
+            if (findExit(x, y - 1, value)) {
+                return true;
+            }
+        }
+        if (this.data[y][x + 1] == 0)
+            if (findExit(x + 1, y, value)) {
+                return true;
+            }
+        if (this.data[y + 1][x] == 0)
+            if (findExit(x, y + 1, value)) {
+                return true;
+            }
+        if (this.data[y][x - 1] == 0)
+            if (findExit(x - 1, y, value)) {
+                return true;
+            }
+        return false;
     }
 
     public void generate(int startX, int startY, int width, int height, int value) {

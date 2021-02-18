@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-@SuppressWarnings("serial")
+
 public class MazePanel extends JPanel {
 
     private final int width;
@@ -27,6 +27,8 @@ public class MazePanel extends JPanel {
             for (int x = 0; x < cols; x++) {
                 if (data[y][x] == 0) {
                     g.setColor(Color.WHITE);
+                } else if (data[y][x] == 3) {
+                    g.setColor(Color.RED);
                 } else {
                     g.setColor(new Color(data[y][x], data[y][x], data[y][x]));
                 }

@@ -17,6 +17,7 @@ public class AppWindow extends JFrame {
         this.menuPanel = new MenuPanel(804, 30);
         this.mazePanel = new MazePanel(804, 804);
         this.controller = new Controller(this.menuPanel, this.mazePanel);
+        this.menuPanel.generateButton.addActionListener(this.controller);
 
         this.add(this.menuPanel, BorderLayout.NORTH);
         this.add(this.mazePanel, BorderLayout.CENTER);
