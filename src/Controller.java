@@ -1,33 +1,30 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-public class Controller implements ActionListener {
+public class Controller implements ActionListener{
 
     MenuPanel menuPanel;
     MazePanel mazePanel;
-    Maze maze;
-    int width;
-    int height;
 
     Controller(MenuPanel menuPanel, MazePanel mazePanel) {
         this.menuPanel = menuPanel;
+        this.menuPanel.generateButton.addActionListener(this);
         this.mazePanel = mazePanel;
-
-        this.width = 201;
-        this.height = 201;
-        this.maze = new Maze(width, height);
-
-        this.maze.drawRect(0, 0, width, height, 1);
-        mazePanel.paintImage(maze.getAllData());
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        this.maze.fillRect(1, 1, this.width - 2, this.width - 2, 0);
-        this.maze.generate(1, 1, this.width - 2, this.height - 2, 1);
-        this.maze.setColRow(this.width - 1, 1, 3);
-        this.maze.findExit(1, 1, 100);
-        this.mazePanel.paintImage(this.maze.getAllData());
-        this.mazePanel.repaint();
+        if (e.getSource() == this.menuPanel.generateButton) {
+            this.mazePanel.maze.fillRect(1, 1, mazePanel.maze.cols - 2, mazePanel.maze.rows - 2, 0);
+            this.mazePanel.maze.generate(1, 1, mazePanel.maze.cols - 2, mazePanel.maze.rows - 2, 1);
+
+            // exit: value = 3
+            this.mazePanel.maze.setColRow(mazePanel.maze.cols - 1, mazePanel.maze.rows - 2, 3);
+            this.mazePanel.maze.findExit(1, 1, 5);
+
+            // start: value = 2
+            this.mazePanel.maze.setColRow(1, 1, 2);
+            //this.mazePanel.maze.findPath(mazePanel.maze.cols - 2, mazePanel.maze.rows - 2, 100000, 4);
+            this.mazePanel.repaint();
+        }
     }
 }

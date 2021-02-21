@@ -2,19 +2,18 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class Maze {
 
-    private int rows;
-    private int cols;
-    private int[][] data;
+    int rows;
+    int cols;
+    int[][] data;
 
     Maze(int cols, int rows) {
         this.rows = rows;
         this.cols = cols;
-
         this.data = new int[this.rows][this.cols];
     }
 
-    public int[][] getAllData() {
-        return this.data;
+    public void setColRow(int col, int row, int value) {
+        this.data[row][col] = value;
     }
 
     public void drawRect(int startX, int startY, int width, int height, int value) {
@@ -39,13 +38,46 @@ public class Maze {
         }
     }
 
-    public void setColRow(int col, int row, int value) {
-        this.data[row][col] = value;
+    public void findPath(int x, int y, int min, int value) {
+        if (this.data[y][x] == 6) {
+            return;
+        }
+
+        this.data[y][x] = value;
+
+        int newX = x;
+        int newY = y;
+
+        if (this.data[y-1][x] < min && this.data[y-1][x] > 4) {
+            newX = x;
+            newY = y-1;
+            min = this.data[y-1][x];
+        }
+        if (this.data[y][x + 1] < min && this.data[y][x + 1] > 4) {
+            newX = x + 1;
+            newY = y;
+            min = this.data[y][x + 1];
+        }
+        if (this.data[y + 1][x] < min && this.data[y + 1][x] > 4) {
+            newX = x;
+            newY = y + 1;
+            min = this.data[y + 1][x];
+        }
+        if (this.data[y][x - 1] < min && this.data[y][x - 1] > 4) {
+            newX = x - 1;
+            newY = y;
+            min = this.data[y][x - 1];
+        }
+        findPath(newX, newY, min, value);
+
     }
 
     public boolean findExit(int x, int y, int value) {
         this.data[y][x] = value;
-        
+
+        value += 1;
+        // value %= 255;
+
         if (this.data[y - 1][x] == 3 || this.data[y][x + 1] == 3 || this.data[y + 1][x] == 3
                 || this.data[y][x - 1] == 3) {
             return true;
@@ -71,6 +103,10 @@ public class Maze {
         return false;
     }
 
+    private int getRandomNums(int count) {
+        return ThreadLocalRandom.current().nextInt(1, count + 1) * 2;
+    }
+
     public void generate(int startX, int startY, int width, int height, int value) {
 
         if (width < 3 || height < 3) {
@@ -82,13 +118,13 @@ public class Maze {
 
             // remaining area is more wide than tall -> draw vertical separation line at a
             // random location
-            int randCol = ThreadLocalRandom.current().nextInt(1, (width / 2) + 1) * 2 + startX - 1;
+            int randCol = getRandomNums(width / 2) + startX - 1;
             for (int row = startY; row < startY + height; row++) {
                 data[row][randCol] = value;
             }
 
             // open one break through at a random location in the separation line
-            int randBreakThrough = ThreadLocalRandom.current().nextInt(1, (height / 2) + 1) * 2 + startY;
+            int randBreakThrough = getRandomNums(height / 2) + startY;
             data[randBreakThrough][randCol] = 0;
 
             // generate recursive maze in the remaining left half
@@ -99,13 +135,13 @@ public class Maze {
         } else {
             // remaining area is more tall than wide -> draw horizontal separation line at a
             // random location
-            int randRow = ThreadLocalRandom.current().nextInt(1, (height / 2) + 1) * 2 + startY - 1;
+            int randRow = getRandomNums(height / 2) + startY - 1;
             for (int col = startX; col < startX + width; col++) {
                 data[randRow][col] = value;
             }
 
             // open one break through at a random location in the separation line
-            int randBreakThrough = ThreadLocalRandom.current().nextInt(1, (width / 2) + 1) * 2 + startX;
+            int randBreakThrough = getRandomNums(width / 2) + startX;
             data[randRow][randBreakThrough] = 0;
 
             // generate recursive maze in the remaining top half
